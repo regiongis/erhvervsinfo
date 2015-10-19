@@ -38,8 +38,8 @@ CREATE MATERIALIZED VIEW _00_grundkort.adresser_adm_rh2 AS
 	    kn100mdk,
 	    kn1kmdk,
 	    kn10kmdk
-    FROM _00_grundkort.adresser
-    WHERE komnr::int in(101,147,151,153,155,157,159,161,163,165,167,169,173,175,183,185,187,190,201,210,217,219,223,230,240,250,260,270)) adr
+           FROM _00_grundkort.adresser
+            WHERE komnr::int in(101,147,151,153,155,157,159,161,163,165,167,169,173,175,183,185,187,190,201,210,217,219,223,230,240,250,260,270)) adr
      LEFT JOIN _00_grundkort.lp_erhvervsomraader_pdk erh ON st_within(adr.the_geom, erh.the_geom)
      LEFT JOIN ( SELECT
             lavbebyg.the_geom,
