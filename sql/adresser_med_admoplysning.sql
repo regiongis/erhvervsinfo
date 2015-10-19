@@ -1,3 +1,4 @@
+--Tager adgangsadresser og joiner med erhversområder og bebyggelsestype
 CREATE MATERIALIZED VIEW _00_grundkort.adresser_adm_rh2 AS 
  SELECT 
     adr.the_geom,
