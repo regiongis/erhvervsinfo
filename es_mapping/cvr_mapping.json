@@ -15,475 +15,366 @@
          },
          "properties": {
             "properties": {
-               "aarsbeskaeftigelse_aar": {
-                  "type": "integer",
-                  "store": true
-               },
-               "aarsbeskaeftigelse_antalaarsvaerk": {
-                  "type": "integer",
-                  "store": true
-               },
-               "aarsbeskaeftigelse_antalaarsvaerkinterval": {
+               "Adresse fritekst": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "aarsbeskaeftigelse_antalansatte": {
-                  "type": "integer",
+                  "index": "not_analyzed",
                   "store": true
                },
-               "aarsbeskaeftigelse_antalansatteinterval": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "aarsbeskaeftigelse_antalinclejere": {
-                  "type": "integer",
-                  "store": true
-               },
-               "aarsbeskaeftigelse_antalinclejereinterval": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "ajourfoeringsdato": {
+               "Ajourføringsdato": {
                   "type": "date",
                   "store": true,
                   "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
                },
-               "bebyggelsestype": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_adressefritekst": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_bogstavfra": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_bogstavtil": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_bynavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_conavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_etage": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "beliggenhedsadresse_husnummerfra": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_husnummertil": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_postboks": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_postdistrikt": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_postnr": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_sidedoer": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_vejkode": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "beliggenhedsadresse_vejnavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "bibranche1_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "bibranche1_kode": {
+               "Antal ansatte (Kvartalsbeskaeftigelse)": {
                   "type": "integer",
                   "store": true
                },
-               "bibranche1_tekst": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
+               "Antal ansatte (Månedsbeskaeftigelse)": {
+                  "type": "integer",
+                  "store": true
                },
-               "bibranche2_gyldigfra": {
+               "Antal ansatte (Årsbeskæftigelse)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Antal ansatte i interval (Kvartalsbeskaeftigelse)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Antal ansatte i interval (Månedsbeskaeftigelse)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Antal ansatte i interval (Årsbeskæftigelse)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Antal incl. ejere (Årsbeskæftigelse)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Antal incl. ejere i interval (Årsbeskæftigelse)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Antal årsværk (Kvartalsbeskaeftigelse)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Antal årsværk (Månedsbeskaeftigelse)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Antal årsværk (Årsbeskæftigelse)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Antal årsværk i interval (Kvartalsbeskaeftigelse)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Antal årsværk i interval (Månedsbeskaeftigelse)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Antal årsværk i interval (Årsbeskæftigelse)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Bebyggelsestype": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Beliggenhedsadresse gyldig fra": {
                   "type": "date",
                   "store": true,
                   "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
                },
-               "bibranche2_kode": {
+               "Bibranche 1 (kode)": {
                   "type": "integer",
                   "store": true
                },
-               "bibranche2_tekst": {
+               "Bibranche 1 (tekst)": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
+                  "index": "not_analyzed",
+                  "store": true
                },
-               "bibranche3_gyldigfra": {
+               "Bibranche 1 gyldig fra": {
                   "type": "date",
                   "store": true,
                   "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
                },
-               "bibranche3_kode": {
+               "Bibranche 2 (kode)": {
                   "type": "integer",
                   "store": true
                },
-               "bibranche3_tekst": {
+               "Bibranche 2 (tekst)": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
+                  "index": "not_analyzed",
+                  "store": true
                },
-               "bynavn": {
-                  "type": "string",
+               "Bibranche 2 gyldig fra": {
+                  "type": "date",
                   "store": true,
-                  "index": "not_analyzed"
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "Bibranche 3 (kode)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Bibranche 3 (tekst)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Bibranche 3 gyldig fra": {
+                  "type": "date",
+                  "store": true,
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "Bogstav fra": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Bogstav til": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Bynavn": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "CO navn": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "CVR-nummer": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "E-mail": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "E-mail gyldig fra": {
+                  "type": "date",
+                  "store": true,
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "Etage": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Hovedafdeling": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Hovedbranche (kode)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Hovedbranche (tekst)": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Hovedbranche gyldig fra": {
+                  "type": "date",
+                  "store": true,
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "Husnummer fra": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Husnummer til": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Kommunekode": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Kommunenavn": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Kvartal (Kvartalsbeskaeftigelse)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Livsforløb ophørsdato": {
+                  "type": "date",
+                  "store": true,
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "Livsforløb startdato": {
+                  "type": "date",
+                  "store": true,
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "Lokalplan anvendelsespecifik": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Lokalplan link": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Lokalplan zonestatus": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Lokalplannavn": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Lokalplannr": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Måned (Månedsbeskaeftigelse)": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Navn gyldig fra": {
+                  "type": "date",
+                  "store": true,
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "P-nummer": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Postboks": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Postdistrikt": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Postnummer": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Side/dør": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Sognnavn": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Sognnnr": {
+                  "type": "integer",
+                  "store": true
+               },
+               "Telefonnummer": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Telefonnummer gyldig fra": {
+                  "type": "date",
+                  "store": true,
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "Vejkode": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Vejnavn": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
+               },
+               "Virksomhed gyldig fra": {
+                  "type": "date",
+                  "store": true,
+                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               },
+               "Virksomhedsnavn": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "store": true
                },
                "deltagere": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "email_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "email_kontaktoplysning": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "erhverv_anvendelsespecifik": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "erhverv_plannavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "erhverv_plannr": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "erhverv_url": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "erhverv_zonestatus": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
+                  "index": "not_analyzed",
+                  "store": true
                },
                "gid": {
                   "type": "integer",
                   "store": true
                },
-               "hovedafdeling": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "hovedbranche_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "hovedbranche_kode": {
-                  "type": "integer",
-                  "store": true
-               },
-               "hovedbranche_tekst": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
                "kn100mdk": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
+                  "index": "not_analyzed",
+                  "store": true
                },
                "kn10kmdk": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
+                  "index": "not_analyzed",
+                  "store": true
                },
                "kn1kmdk": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "kommunekode": {
-                  "type": "integer",
-                  "store": true
-               },
-               "kommunenavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "kvartalsbeskaeftigelse_aar": {
-                  "type": "integer",
-                  "store": true
-               },
-               "kvartalsbeskaeftigelse_antalaarsvaerk": {
-                  "type": "integer",
-                  "store": true
-               },
-               "kvartalsbeskaeftigelse_antalaarsvaerkinterval": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "kvartalsbeskaeftigelse_antalansatte": {
-                  "type": "integer",
-                  "store": true
-               },
-               "kvartalsbeskaeftigelse_antalansatteinterval": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "kvartalsbeskaeftigelse_kvartal": {
-                  "type": "integer",
-                  "store": true
-               },
-               "livsforloeb_ophoersdato": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "livsforloeb_startdato": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "maanedsbeskaeftigelse_aar": {
-                  "type": "integer",
-                  "store": true
-               },
-               "maanedsbeskaeftigelse_antalaarsvaerk": {
-                  "type": "integer",
-                  "store": true
-               },
-               "maanedsbeskaeftigelse_antalaarsvaerkinterval": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "maanedsbeskaeftigelse_antalansatte": {
-                  "type": "integer",
-                  "store": true
-               },
-               "maanedsbeskaeftigelse_antalansatteinterval": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "maanedsbeskaeftigelse_maaned": {
-                  "type": "integer",
+                  "index": "not_analyzed",
                   "store": true
                },
                "modifikationsstatus": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "navn_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "pnr": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_adressefritekst": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_bogstavfra": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_bogstavtil": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_bynavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_conavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_etage": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "postadresse_husnummerfra": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_husnummertil": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_kommune_kode": {
-                  "type": "integer",
+                  "index": "not_analyzed",
                   "store": true
-               },
-               "postadresse_kommune_tekst": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_postboks": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_postdistrikt": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_postnr": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_sidedoer": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_vejkode": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "postadresse_vejnavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "regionkode": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "regionnavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
                },
                "reklamebeskyttelse": {
                   "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
+                  "index": "not_analyzed",
+                  "store": true
                },
-               "sognnavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "sognnr": {
+               "År (Kvartalsbeskaeftigelse)": {
                   "type": "integer",
                   "store": true
                },
-               "telefax_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+               "År (Månedsbeskaeftigelse)": {
+                  "type": "integer",
+                  "store": true
                },
-               "telefax_kontaktoplysning": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "telefonnummer_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "telefonnummer_kontaktoplysning": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "virksomhed_cvrnr": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
-               },
-               "virksomhed_gyldigfra": {
-                  "type": "date",
-                  "store": true,
-                  "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-               },
-               "virksomhedsnavn": {
-                  "type": "string",
-                  "store": true,
-                  "index": "not_analyzed"
+               "År (Årsbeskæftigelse)": {
+                  "type": "integer",
+                  "store": true
                }
             }
          },
