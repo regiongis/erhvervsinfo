@@ -35,15 +35,15 @@ from elasticsearch_dsl import Search
 
 
 # CVR Elastic Search credentials
-ES_username = 'Tabula_CVR_I_SKYEN'
-ES_password = '63ae874d-eb76-4772-a660-05246917edcf'
+ES_username = 'xxxx'
+ES_password = 'xxxx'
 ES_host = 'distribution.virk.dk'
 ES_port = 80
 ES_index = 'cvr-permanent'
 
 # Ballerup Kommune PostgreSQL credentials
-PG_username = 'svejagd'
-PG_password = '8MzLuOKMnpgZHnmc1IxS'
+PG_username = 'xxxx'
+PG_password = 'xxxx'
 PG_host = 'drayton.mapcentia.com'
 PG_port = 5432
 PG_database = 'ballerup'
