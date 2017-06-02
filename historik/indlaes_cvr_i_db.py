@@ -22,12 +22,9 @@
 
 
 import sys
-import json
 import logging
 import traceback
-import pprint
 import psycopg2
-from os import path
 from time import sleep
 from datetime import datetime
 import elasticsearch
@@ -37,25 +34,18 @@ startTime = datetime.now()
 max_date = datetime.strptime("2017-01-24", '%Y-%m-%d').date()
 
 # CVR Elastic Search credentials
-ES_username = 'Tabula_CVR_I_SKYEN'
-ES_password = '63ae874d-eb76-4772-a660-05246917edcf'
+ES_username = 'username' # replace this
+ES_password = 'password' # replace this
 ES_host = 'distribution.virk.dk'
 ES_port = 80
 ES_index = 'cvr-permanent'
 
 # Ballerup Kommune PostgreSQL credentials
-PG_username = 'tabula'
-PG_password = '18e9c2e123'
+PG_username = 'username' # replace this
+PG_password = 'password' # replace this
 PG_host = 'drayton.mapcentia.com'
 PG_port = 5432
 PG_database = 'ballerup'
-
-# # Localhost PostgreSQL credentials
-# PG_username = 'postgres'
-# PG_password = 'postgres'
-# PG_host = 'localhost'
-# PG_port = 5432
-# PG_database = 'ballerup'
 
 # Schema, table and column name for 'pNummer'
 PG_schema = 'cvr'
