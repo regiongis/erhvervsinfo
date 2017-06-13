@@ -30,6 +30,32 @@ from datetime import datetime
 import elasticsearch
 from elasticsearch_dsl import Search
 
+def change_interval(s):
+    if s == None:
+        return None
+    elif s == 'ANTAL_0_0':
+        return '0'
+    elif s == 'ANTAL_1_1':
+        return '1'
+    elif s == 'ANTAL_2_4':
+        return '2 - 4'
+    elif s == 'ANTAL_5_9':
+        return '5 - 9'
+    elif s == 'ANTAL_10_19':
+        return '10 - 19'
+    elif s == 'ANTAL_20_49':
+        return '20 - 49'
+    elif s == 'ANTAL_50_99':
+        return '50 - 99'
+    elif s == 'ANTAL_100_199':
+        return '100 - 199'
+    elif s == 'ANTAL_200_499':
+        return '200 - 499'
+    elif s == 'ANTAL_500_999':
+        return '500 - 999'
+    elif s == 'ANTAL_1000_999999':
+        return '1000+'
+
 startTime = datetime.now()
 max_date = datetime.strptime("2017-01-24", '%Y-%m-%d').date()
 
@@ -57,7 +83,6 @@ PG_hist_ansatte_aar = PG_schema+'.'+'cvr_prod_enhed_geo_hist_ansatte_aar'
 PG_hist_ansatte_kvart = PG_schema+'.'+'cvr_prod_enhed_geo_hist_ansatte_kvartal'
 PG_hist_ansatte_maaned = PG_schema+'.'+'cvr_prod_enhed_geo_hist_ansatte_maaned'
 PG_hist_hovedbranche = PG_schema+'.'+'cvr_prod_enhed_geo_hist_hovedbranche'
-
 
 def extract_date_from_address(address_dict):
     return address_dict['periode']['gyldigFra']
@@ -186,9 +211,9 @@ for num, pnr in enumerate(pnr_list):
                     aar = employment_data["aar"]
                     if int(aar) >= max_date.year: # We are no interested in the newest data, as it is covered by dumps by Per
                         continue
-                    interval_aar_ansatte = employment_data["intervalKodeAntalAnsatte"]
-                    interval_aar_aarsvaerk = employment_data["intervalKodeAntalAarsvaerk"]
-                    interval_aar_inkl_ejere = employment_data["intervalKodeAntalInklusivEjere"]
+                    interval_aar_ansatte = change_interval(employment_data["intervalKodeAntalAnsatte"])
+                    interval_aar_aarsvaerk = change_interval(employment_data["intervalKodeAntalAarsvaerk"])
+                    interval_aar_inkl_ejere = change_interval(employment_data["intervalKodeAntalInklusivEjere"])
                     SQL = """
                     INSERT INTO {} (kilde, pnr, aarsbeskaeftigelse_aar, aarsbes_antansatteinterval, aarsbes_antaarsvaerkinterval, aarsbes_antinclejereinterval)
                     VALUES ('virk.dk', %s, %s, %s, %s, %s);
@@ -203,8 +228,8 @@ for num, pnr in enumerate(pnr_list):
                     if int(aar) >= max_date.year: # We are no interested in the newest data, as it is covered by dumps by Per
                         continue
                     kvartal = employment_data["kvartal"]
-                    interval_kvart_aarsvaerk = employment_data["intervalKodeAntalAarsvaerk"]
-                    interval_kvart_ansatte = employment_data["intervalKodeAntalAnsatte"]
+                    interval_kvart_aarsvaerk = change_interval(employment_data["intervalKodeAntalAarsvaerk"])
+                    interval_kvart_ansatte = change_interval(employment_data["intervalKodeAntalAnsatte"])
                     SQL = """
                     INSERT INTO {} (kilde, pnr, kvartalsbeskaeftigelse_aar, kvartalsbeskaeftigelse_kvartal, kvartalsbeskaeftigelse_antalansatteinterval, kvartalsbeskaeftigelse_antalaarsvaerkinterval)
                     VALUES ('virk.dk', %s, %s, %s, %s, %s);
