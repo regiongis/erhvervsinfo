@@ -1,5 +1,5 @@
-CREATE OR REPLACE FUNCTION cvr.flyttemoenster(IN komkode integer)
-  RETURNS TABLE(status text, virksomhed_cvrnr bigint, pnr bigint, hovedbranche_tekst character varying, navn_tekst character varying, kommune_kode smallint, beliggenhedsadresse_vejnavn character varying, belig_adresse_husnummerfra bigint, beliggenhedsadresse_postnr bigint, belig_adresse_postdistrikt character varying, email_kontaktoplysning character varying, livsforloeb_startdato timestamp without time zone) AS
+CREATE OR REPLACE FUNCTION cvr.flyttemoenster_geom(IN komkode integer)
+  RETURNS TABLE(status text, virksomhed_cvrnr bigint, pnr bigint, hovedbranche_tekst character varying, navn_tekst character varying, kommune_kode smallint, beliggenhedsadresse_vejnavn character varying, belig_adresse_husnummerfra bigint, beliggenhedsadresse_postnr bigint, belig_adresse_postdistrikt character varying, email_kontaktoplysning character varying, livsforloeb_startdato timestamp without time zone, x double precision, y double precision, indlaest_dato date) AS
 $BODY$
 
 WITH cvr_aktuel AS (
@@ -13,7 +13,9 @@ WITH cvr_aktuel AS (
             cvr_prod_enhed_geo.beliggenhedsadresse_postnr,
             cvr_prod_enhed_geo.belig_adresse_postdistrikt,
             cvr_prod_enhed_geo.email_kontaktoplysning,
-            cvr_prod_enhed_geo.livsforloeb_startdato
+            cvr_prod_enhed_geo.livsforloeb_startdato,
+            cvr_prod_enhed_geo.geom,
+            indlaest_dato
            FROM cvr.cvr_prod_enhed_geo
           WHERE cvr_prod_enhed_geo.indlaest_dato = date_trunc('month'::text, now())::date
         ), cvr_sidste_md AS (
@@ -27,7 +29,9 @@ WITH cvr_aktuel AS (
             cvr_prod_enhed_geo.beliggenhedsadresse_postnr,
             cvr_prod_enhed_geo.belig_adresse_postdistrikt,
             cvr_prod_enhed_geo.email_kontaktoplysning,
-            cvr_prod_enhed_geo.livsforloeb_startdato
+            cvr_prod_enhed_geo.livsforloeb_startdato,
+            cvr_prod_enhed_geo.geom,
+            indlaest_dato
            FROM cvr.cvr_prod_enhed_geo
           WHERE cvr_prod_enhed_geo.indlaest_dato = date_trunc('month'::text, now() - '1 mon'::interval)::date
         )
@@ -42,7 +46,10 @@ WITH cvr_aktuel AS (
     a.beliggenhedsadresse_postnr,
     a.belig_adresse_postdistrikt,
     a.email_kontaktoplysning,
-    a.livsforloeb_startdato
+    a.livsforloeb_startdato,
+    st_x(st_transform(a.geom, 4326)) x,
+    st_y(st_transform(a.geom, 4326)) y,
+    a.indlaest_dato
    FROM cvr_aktuel a
      LEFT JOIN cvr_sidste_md b ON a.pnr = b.pnr
   WHERE a.kommune_kode = komkode AND a.kommune_kode <> b.kommune_kode
@@ -58,7 +65,10 @@ UNION
     a.beliggenhedsadresse_postnr,
     a.belig_adresse_postdistrikt,
     a.email_kontaktoplysning,
-    a.livsforloeb_startdato
+    a.livsforloeb_startdato,
+    st_x(st_transform(a.geom, 4326)) x,
+    st_y(st_transform(a.geom, 4326)) y,
+    a.indlaest_dato
    FROM cvr_aktuel a
      RIGHT JOIN cvr_sidste_md b ON a.pnr = b.pnr
   WHERE b.kommune_kode = komkode AND a.kommune_kode <> b.kommune_kode
@@ -74,7 +84,10 @@ UNION
     a.beliggenhedsadresse_postnr,
     a.belig_adresse_postdistrikt,
     a.email_kontaktoplysning,
-    a.livsforloeb_startdato
+    a.livsforloeb_startdato,
+    st_x(st_transform(a.geom, 4326)) x,
+    st_y(st_transform(a.geom, 4326)) y,
+    a.indlaest_dato
    FROM cvr_aktuel a
   WHERE a.kommune_kode = komkode AND a.livsforloeb_startdato > date_trunc('month'::text, now() - '1 mon'::interval)::date
 UNION
@@ -89,10 +102,13 @@ UNION
     b.beliggenhedsadresse_postnr,
     b.belig_adresse_postdistrikt,
     b.email_kontaktoplysning,
-    b.livsforloeb_startdato
+    b.livsforloeb_startdato,
+    st_x(st_transform(b.geom, 4326)) x,
+    st_y(st_transform(b.geom, 4326)) y,
+    b.indlaest_dato
    FROM cvr_aktuel a
      RIGHT JOIN cvr_sidste_md b ON a.pnr = b.pnr
   WHERE b.kommune_kode = komkode AND a.pnr IS NULL
 
 $BODY$
-  LANGUAGE sql VOLATILE;
+  LANGUAGE sql VOLATILE
