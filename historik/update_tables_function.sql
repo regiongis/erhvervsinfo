@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION cvr.update_tables() RETURNS void AS $$
+CREATE OR REPLACE FUNCTION cvr.update_tables_prod() RETURNS void AS $$
 
 ----------------------------------------------------------------------------------------
 /* OPDATERER STAMTABEL */
