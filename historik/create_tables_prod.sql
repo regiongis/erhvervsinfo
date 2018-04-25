@@ -11,8 +11,13 @@ SET search_path TO cvr, public;
 /* CREATE TABLES */
 ----------------------------------------------------------------------------------------
 
+-- Opretter stamtabel med udgangspunkt i opbygningen af LIFA's data
 CREATE TABLE cvr.cvr_prod_enhed_geo_stam (LIKE cvr.cvr_prod_enhed_geo);
 
+-- Sætter pnr som primary key i stamdatatabellen
+ALTER TABLE cvr.cvr_prod_enhed_geo_stam ADD PRIMARY KEY (pnr);
+
+-- Opretter skelet til historik-tabel for adresser
 CREATE TABLE cvr.cvr_prod_enhed_geo_hist_adresser (
   pnr BIGINT,
   indlaest_dato DATE,
@@ -33,7 +38,6 @@ CREATE TABLE cvr.cvr_prod_enhed_geo_hist_adresser (
   beliggenhedsadresse_postboks BIGINT,
   beliggenhedsadresse_conavn VARCHAR(40),
   belig_adresse_adr_fritekst VARCHAR(238),
-
   tilnaermethusnr VARCHAR(4),
   geokodningskvalitet VARCHAR(100),
   koornord DOUBLE PRECISION,
@@ -47,19 +51,22 @@ CREATE TABLE cvr.cvr_prod_enhed_geo_hist_adresser (
   lifasystemid INTEGER,
   geom GEOMETRY(Point,25832),
   gid INTEGER,
-
-  kilde VARCHAR(10)
+  kilde VARCHAR(10),
+  FOREIGN KEY (pnr) REFERENCES cvr.cvr_prod_enhed_geo_stam (pnr) -- bemærk: ingen primary key i danne tabel, da (pnr, beliggenhedsadresse_gyldigfra) ikke er en unik nøgle grundet dårlig datakvalitet.
 );
 
+-- Opretter skelet til historik-tabel for hovedbranche
 CREATE TABLE cvr.cvr_prod_enhed_geo_hist_hovedbranche (
   pnr BIGINT,
   indlaest_dato DATE,
   hovedbranche_gyldigfra TIMESTAMP,
   hovedbranche_kode INT,
   hovedbranche_tekst VARCHAR(130),
-  kilde VARCHAR(10)
+  kilde VARCHAR(10),
+  FOREIGN KEY (pnr) REFERENCES cvr.cvr_prod_enhed_geo_stam (pnr) -- bemærk: ingen primary key i danne tabel, da (pnr, hovedbranche_gyldigfra) ikke er en unik nøgle grundet dårlig datakvalitet.
 );
 
+-- Opretter skelet til historik-tabel for ansatte (aar)
 CREATE TABLE cvr.cvr_prod_enhed_geo_hist_ansatte_aar (
   pnr BIGINT,
   indlaest_dato DATE,
@@ -70,9 +77,12 @@ CREATE TABLE cvr.cvr_prod_enhed_geo_hist_ansatte_aar (
   aarsbes_antaarsvaerkinterval VARCHAR(100),
   aarsbes_antalinclejere INT,
   aarsbes_antinclejereinterval VARCHAR(100),
-  kilde VARCHAR(10)
+  kilde VARCHAR(10),
+  PRIMARY KEY (pnr, aarsbeskaeftigelse_aar),
+  FOREIGN KEY (pnr) REFERENCES cvr.cvr_prod_enhed_geo_stam(pnr)
 );
 
+-- Opretter skelet til historik-tabel for ansatte (kvartal)
 CREATE TABLE cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal (
   pnr BIGINT,
   indlaest_dato DATE,
@@ -82,9 +92,13 @@ CREATE TABLE cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal (
   kvartalsbeskaeftigelse_antalansatteinterval VARCHAR(300),
   kvartalsbeskaeftigelse_antalaarsvaerk INT,
   kvartalsbeskaeftigelse_antalaarsvaerkinterval VARCHAR(300),
-  kilde VARCHAR(10)
+  kilde VARCHAR(10),
+  PRIMARY KEY (pnr, kvartalsbeskaeftigelse_aar, kvartalsbeskaeftigelse_kvartal),
+  FOREIGN KEY (pnr) REFERENCES cvr.cvr_prod_enhed_geo_stam(pnr)
 );
 
+
+-- STARTER SEKVENS TIL GEO-ID'ER I GEOKODNINGEN AF DATA FRA ERHVERVSSTYRELSEN
 CREATE SEQUENCE gid_seq START 2000000001;
 
 
@@ -262,7 +276,8 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_adresser (
     stam.geom,
     stam.gid,
     'LIFA'
-  FROM cvr.cvr_prod_enhed_geo_stam stam;
+  FROM cvr.cvr_prod_enhed_geo_stam stam
+  WHERE beliggenhedsadresse_gyldigfra IS NOT NULL; 
 
 INSERT INTO cvr.cvr_prod_enhed_geo_hist_hovedbranche (
     pnr,
@@ -278,7 +293,8 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_hovedbranche (
     stam.hovedbranche_kode,
     stam.hovedbranche_tekst,
     'LIFA'
-  FROM cvr.cvr_prod_enhed_geo_stam stam;
+  FROM cvr.cvr_prod_enhed_geo_stam stam
+  WHERE hovedbranche_gyldigfra IS NOT NULL; 
 
 INSERT INTO cvr.cvr_prod_enhed_geo_hist_ansatte_aar (
     pnr,
@@ -302,7 +318,8 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_ansatte_aar (
     stam.aarsbes_antalinclejere,
     stam.aarsbes_antinclejereinterval,
     'LIFA'
-  FROM cvr.cvr_prod_enhed_geo_stam stam;
+  FROM cvr.cvr_prod_enhed_geo_stam stam
+  WHERE aarsbeskaeftigelse_aar IS NOT NULL; 
 
 INSERT INTO cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal (
     pnr,
@@ -324,5 +341,6 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal (
     stam.kvartalsbeskaeftigelse_antalaarsvaerk,
     stam.kvartalsbeskaeftigelse_antalaarsvaerkinterval,
     'LIFA'
-  FROM cvr.cvr_prod_enhed_geo_stam stam;
+  FROM cvr.cvr_prod_enhed_geo_stam stam
+  WHERE kvartalsbeskaeftigelse_aar IS NOT NULL AND kvartalsbeskaeftigelse_kvartal IS NOT NULL; 
 
