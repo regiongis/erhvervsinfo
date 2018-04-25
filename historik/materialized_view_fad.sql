@@ -8,7 +8,6 @@ SELECT
   stam.cvrnr,
   stam.pnr,
   stam.deltagertype,
-  stam.id,
   stam.navn,
   stam.personstatus,
   stam.rolle,
