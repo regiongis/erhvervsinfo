@@ -62,7 +62,7 @@ INSERT INTO cvr.cvr_fad_view_stam
     dump.cvrnr,
     dump.pnr,
     dump.deltagertype,
-    dump.id,
+    NULL as id,
     dump.navn,
     dump.personstatus,
     dump.rolle,
