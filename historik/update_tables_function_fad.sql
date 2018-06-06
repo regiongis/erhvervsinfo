@@ -87,11 +87,4 @@ INSERT INTO cvr.cvr_fad_view_stam
   AND dump.indlaest_dato = (SELECT MAX(cvr.cvr_fad_view.indlaest_dato) FROM cvr.cvr_fad_view)
 );
 
-
-----------------------------------------------------------------------------------------
-/* REFRESH MATERIALIZED VIEWS */
-----------------------------------------------------------------------------------------	   
-
-REFRESH MATERIALIZED VIEW cvr.cvr_fad_adresser;
-
 $$ LANGUAGE SQL;
