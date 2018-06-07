@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION cvr.update_tables_prod() RETURNS void AS $$
+CREATE OR REPLACE FUNCTION cvr.update_tables_prod()
+  RETURNS void
+LANGUAGE SQL
+AS $$
 
 ----------------------------------------------------------------------------------------
 /* OPDATERER STAMTABEL */
@@ -106,11 +109,9 @@ UPDATE cvr.cvr_prod_enhed_geo_stam AS stam
     gid = dump.gid
   FROM cvr.cvr_prod_enhed_geo dump
   WHERE (stam.pnr = dump.pnr
-  --AND dump.indlaest_dato = '2017-01-24' -- disse datoer kan bruges til den første opsætning
-  --AND dump.indlaest_dato = '2017-02-01'
+  --AND dump.indlaest_dato = '2017-02-01' -- disse datoer skal bruges til den første opsætning, og det er alle datoerne, som hverken er ældst eller yngst. Datoerne findes med querien: SELECT COUNT(*), indlaest_dato FROM cvr.cvr_prod_enhed_geo GROUP BY indlaest_dato;
   --AND dump.indlaest_dato = '2017-03-01'
   --AND dump.indlaest_dato = '2017-04-01'
-  --AND dump.indlaest_dato = '2017-04-27'
   --AND dump.indlaest_dato = '2017-05-01'
   AND dump.indlaest_dato = (SELECT MAX(cvr.cvr_prod_enhed_geo.indlaest_dato) FROM cvr.cvr_prod_enhed_geo)
 );
@@ -218,14 +219,11 @@ INSERT INTO cvr.cvr_prod_enhed_geo_stam
   FROM cvr.cvr_prod_enhed_geo_stam stam
   RIGHT JOIN cvr.cvr_prod_enhed_geo dump ON stam.pnr = dump.pnr
   WHERE (stam.pnr IS NULL
-  --AND dump.indlaest_dato = '2017-01-24' -- disse linjer kan bruges til den første opsætning
-  --AND dump.indlaest_dato = '2017-02-01'
+  --AND dump.indlaest_dato = '2017-02-01' -- disse datoer skal bruges til den første opsætning, og det er alle datoerne, som hverken er ældst eller yngst. Datoerne findes med querien: SELECT COUNT(*), indlaest_dato FROM cvr.cvr_prod_enhed_geo GROUP BY indlaest_dato;
   --AND dump.indlaest_dato = '2017-03-01'
   --AND dump.indlaest_dato = '2017-04-01'
-  --AND dump.indlaest_dato = '2017-04-27'
   --AND dump.indlaest_dato = '2017-05-01'
   AND dump.indlaest_dato = (SELECT MAX(cvr.cvr_prod_enhed_geo.indlaest_dato) FROM cvr.cvr_prod_enhed_geo)
-
 );
 
 
@@ -304,7 +302,9 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_adresser (
     'LIFA'
   FROM cvr.cvr_prod_enhed_geo_stam stam
   LEFT JOIN cvr.cvr_prod_enhed_geo_hist_adresser ON stam.pnr = cvr.cvr_prod_enhed_geo_hist_adresser.pnr
-  WHERE cvr.cvr_prod_enhed_geo_hist_adresser.pnr IS NULL;
+  WHERE cvr.cvr_prod_enhed_geo_hist_adresser.pnr IS NULL
+  AND stam.beliggenhedsadresse_gyldigfra IS NOT NULL;
+
 
 -- Tilføjer nye adresser til eksisterende p-enheder i tabellen cvr_prod_enhed_geo_hist_adresser
 WITH cvr_prod_enhed_geo_hist_adresser_nyeste AS (
@@ -383,12 +383,18 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_adresser (
   INNER JOIN cvr.cvr_prod_enhed_geo_hist_adresser ON stam.pnr = cvr.cvr_prod_enhed_geo_hist_adresser.pnr
   INNER JOIN cvr_prod_enhed_geo_hist_adresser_nyeste ON stam.pnr = cvr_prod_enhed_geo_hist_adresser_nyeste.pnr
   WHERE ((cvr.cvr_prod_enhed_geo_hist_adresser.indlaest_dato = cvr_prod_enhed_geo_hist_adresser_nyeste.adresse_dato)
-  AND (cvr.cvr_prod_enhed_geo_hist_adresser.beliggenhedsadresse_vejkode::text ||
-      cvr.cvr_prod_enhed_geo_hist_adresser.belig_adresse_husnummerfra::text ||
-      cvr.cvr_prod_enhed_geo_hist_adresser.beliggenhedsadresse_postnr::text !=
-      stam.beliggenhedsadresse_vejkode::text ||
-      stam.belig_adresse_husnummerfra::text ||
-      stam.beliggenhedsadresse_postnr::text));
+  AND  (COALESCE(stam.beliggenhedsadresse_vejkode::text, '') ||
+       COALESCE(stam.belig_adresse_husnummerfra::text, '') ||
+       COALESCE(stam.beliggenhedsadresse_postnr::text, '') ||
+       COALESCE(stam.beliggenhedsadresse_bogstavfra::text, '') ||
+       COALESCE(stam.beliggenhedsadresse_etage::text, '') ||
+       COALESCE(stam.beliggenhedsadresse_sidedoer::text, '') !=
+       COALESCE(cvr.cvr_prod_enhed_geo_hist_adresser.beliggenhedsadresse_vejkode::text, '') ||
+       COALESCE(cvr.cvr_prod_enhed_geo_hist_adresser.belig_adresse_husnummerfra::text, '') ||
+       COALESCE(cvr.cvr_prod_enhed_geo_hist_adresser.beliggenhedsadresse_postnr::text, '') ||
+       COALESCE(cvr.cvr_prod_enhed_geo_hist_adresser.beliggenhedsadresse_bogstavfra::text, '') ||
+       COALESCE(cvr.cvr_prod_enhed_geo_hist_adresser.beliggenhedsadresse_etage::text, '') ||
+       COALESCE(cvr.cvr_prod_enhed_geo_hist_adresser.beliggenhedsadresse_sidedoer::text, '')));
 
 
 ----------------------------------------------------------------------------------------
@@ -412,7 +418,8 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_hovedbranche(
     'LIFA'
   FROM cvr.cvr_prod_enhed_geo_stam stam
   LEFT JOIN cvr.cvr_prod_enhed_geo_hist_hovedbranche ON stam.pnr = cvr.cvr_prod_enhed_geo_hist_hovedbranche.pnr
-  WHERE cvr.cvr_prod_enhed_geo_hist_hovedbranche.pnr IS NULL;
+  WHERE cvr.cvr_prod_enhed_geo_hist_hovedbranche.pnr IS NULL
+  AND stam.hovedbranche_gyldigfra IS NOT NULL;
 
 -- Tilføjer ændret hovedbranche til eksisterende p-enheder i tabellen cvr_prod_enhed_geo_hist_hovedbranche
 WITH cvr_prod_enhed_geo_hist_hovedbranche_nyeste AS (
@@ -437,7 +444,8 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_hovedbranche(
   INNER JOIN cvr.cvr_prod_enhed_geo_hist_hovedbranche ON stam.pnr = cvr.cvr_prod_enhed_geo_hist_hovedbranche.pnr
   INNER JOIN cvr_prod_enhed_geo_hist_hovedbranche_nyeste ON stam.pnr = cvr_prod_enhed_geo_hist_hovedbranche_nyeste.pnr
   WHERE ((cvr.cvr_prod_enhed_geo_hist_hovedbranche.indlaest_dato = cvr_prod_enhed_geo_hist_hovedbranche_nyeste.hovedbranche_dato)
-  AND (cvr.cvr_prod_enhed_geo_hist_hovedbranche.hovedbranche_kode != stam.hovedbranche_kode));
+  AND   ((cvr.cvr_prod_enhed_geo_hist_hovedbranche.hovedbranche_kode != stam.hovedbranche_kode) OR
+        (cvr.cvr_prod_enhed_geo_hist_hovedbranche.hovedbranche_tekst != stam.hovedbranche_tekst)));
 
 
 ----------------------------------------------------------------------------------------
@@ -469,9 +477,32 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_ansatte_aar (
     'LIFA'
   FROM cvr.cvr_prod_enhed_geo_stam stam
   LEFT JOIN cvr.cvr_prod_enhed_geo_hist_ansatte_aar ON stam.pnr = cvr.cvr_prod_enhed_geo_hist_ansatte_aar.pnr
-  WHERE cvr.cvr_prod_enhed_geo_hist_ansatte_aar.pnr IS NULL;
+  WHERE cvr.cvr_prod_enhed_geo_hist_ansatte_aar.pnr IS NULL
+  AND stam.aarsbeskaeftigelse_aar IS NOT NULL;
 
--- Tilføjer ændret antal ansatte til eksisterende p-enheder i tabellen cvr_prod_enhed_geo_hist_ansatte_aar
+
+-- Opdaterer de rækker i historiktabellen, hvor der er kommet nye beskæftigelsesdata for et (pnr, aarbeskæftigelse_aar), som allerede står i historik-tabellen
+UPDATE cvr.cvr_prod_enhed_geo_hist_ansatte_aar hist
+  SET
+    pnr = stam.pnr,
+    indlaest_dato = stam.indlaest_dato,
+    aarsbeskaeftigelse_aar = stam.aarsbeskaeftigelse_aar,
+    aarsbes_antalansatte = stam.aarsbes_antalansatte,
+    aarsbes_antansatteinterval = stam.aarsbes_antansatteinterval,
+    aarsbes_antalaarsvaerk = stam.aarsbes_antalaarsvaerk,
+    aarsbes_antaarsvaerkinterval = stam.aarsbes_antaarsvaerkinterval,
+    aarsbes_antalinclejere = stam.aarsbes_antalinclejere,
+    aarsbes_antinclejereinterval = stam.aarsbes_antinclejereinterval,
+    kilde = 'LIFA'
+  FROM cvr.cvr_prod_enhed_geo_stam stam
+  WHERE (hist.pnr = stam.pnr)
+  AND   (hist.aarsbeskaeftigelse_aar = stam.aarsbeskaeftigelse_aar)
+  AND   ((hist.aarsbes_antalansatte != stam.aarsbes_antalansatte) OR
+        (hist.aarsbes_antalaarsvaerk != stam.aarsbes_antalaarsvaerk) OR
+        (hist.aarsbes_antalinclejere != stam.aarsbes_antalinclejere));
+
+
+-- Tilføjer rækker med antal ansatte for de pnr, som allerede eksisterer i historik-tabellen, men hvor årstallet er nyt
 WITH cvr_prod_enhed_geo_hist_ansatte_aar_nyeste AS (
   SELECT pnr, MAX(indlaest_dato) AS ansatte_dato
   FROM cvr.cvr_prod_enhed_geo_hist_ansatte_aar
@@ -502,8 +533,7 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_ansatte_aar (
   INNER JOIN cvr.cvr_prod_enhed_geo_hist_ansatte_aar ON stam.pnr = cvr.cvr_prod_enhed_geo_hist_ansatte_aar.pnr
   INNER JOIN cvr_prod_enhed_geo_hist_ansatte_aar_nyeste ON stam.pnr = cvr_prod_enhed_geo_hist_ansatte_aar_nyeste.pnr
   WHERE ((cvr.cvr_prod_enhed_geo_hist_ansatte_aar.indlaest_dato = cvr_prod_enhed_geo_hist_ansatte_aar_nyeste.ansatte_dato)
-  AND ((cvr.cvr_prod_enhed_geo_hist_ansatte_aar.aarsbes_antalansatte != stam.aarsbes_antalansatte) OR
-       (cvr.cvr_prod_enhed_geo_hist_ansatte_aar.aarsbes_antalaarsvaerk != stam.aarsbes_antalaarsvaerk)));
+  AND   cvr.cvr_prod_enhed_geo_hist_ansatte_aar.aarsbeskaeftigelse_aar != stam.aarsbeskaeftigelse_aar);
 
 
 ----------------------------------------------------------------------------------------
@@ -533,9 +563,31 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal (
     'LIFA'
   FROM cvr.cvr_prod_enhed_geo_stam stam
   LEFT JOIN cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal ON stam.pnr = cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.pnr
-  WHERE cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.pnr IS NULL;
+  WHERE cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.pnr IS NULL
+  AND stam.kvartalsbeskaeftigelse_aar IS NOT NULL
+  AND stam.kvartalsbeskaeftigelse_kvartal IS NOT NULL;
 
--- Tilføjer ændret antal ansatte til eksisterende p-enheder i tabellen cvr_prod_enhed_geo_hist_ansatte_kvartal
+
+-- Opdaterer de rækker i historiktabellen, hvor der er kommet nye beskæftigelsesdata for et (pnr, aarbeskæftigelse_aar, kvartalsbeskaeftigelse_kvartal), som allerede står i historik-tabellen
+UPDATE cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal hist
+  SET
+    pnr = stam.pnr,
+    indlaest_dato = stam.indlaest_dato,
+    kvartalsbeskaeftigelse_aar = stam.kvartalsbeskaeftigelse_aar,
+    kvartalsbeskaeftigelse_kvartal = stam.kvartalsbeskaeftigelse_kvartal,
+    kvartalsbeskaeftigelse_antalansatte = stam.kvartalsbeskaeftigelse_antalansatte,
+    kvartalsbeskaeftigelse_antalansatteinterval = stam.kvartalsbeskaeftigelse_antalansatteinterval,
+    kvartalsbeskaeftigelse_antalaarsvaerk = stam.kvartalsbeskaeftigelse_antalaarsvaerk,
+    kvartalsbeskaeftigelse_antalaarsvaerkinterval = stam.kvartalsbeskaeftigelse_antalaarsvaerkinterval,
+    kilde = 'LIFA'
+  FROM cvr.cvr_prod_enhed_geo_stam stam
+  WHERE (hist.pnr = stam.pnr)
+  AND   (hist.kvartalsbeskaeftigelse_aar = stam.kvartalsbeskaeftigelse_aar)
+  AND   (hist.kvartalsbeskaeftigelse_kvartal = stam.kvartalsbeskaeftigelse_kvartal)
+  AND   ((hist.kvartalsbeskaeftigelse_antalansatte != stam.kvartalsbeskaeftigelse_antalansatte) OR
+        (hist.kvartalsbeskaeftigelse_antalaarsvaerk != stam.kvartalsbeskaeftigelse_antalaarsvaerk));
+
+-- Tilføjer rækker med antal ansatte for de pnr, som allerede eksisterer i historik-tabellen, men hvor årstallet eller kvartalet er nyt
 WITH cvr_prod_enhed_geo_hist_ansatte_kvartal_nyeste AS (
   SELECT pnr, MAX(indlaest_dato) AS ansatte_dato
   FROM cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal
@@ -563,17 +615,18 @@ INSERT INTO cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal (
   FROM cvr.cvr_prod_enhed_geo_stam stam
   INNER JOIN cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal ON stam.pnr = cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.pnr
   INNER JOIN cvr_prod_enhed_geo_hist_ansatte_kvartal_nyeste ON stam.pnr = cvr_prod_enhed_geo_hist_ansatte_kvartal_nyeste.pnr
-  WHERE ((cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.indlaest_dato = cvr_prod_enhed_geo_hist_ansatte_kvartal_nyeste.ansatte_dato)
-  AND ((cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.kvartalsbeskaeftigelse_antalansatte != stam.kvartalsbeskaeftigelse_antalansatte) OR
-       (cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.kvartalsbeskaeftigelse_antalaarsvaerk != stam.kvartalsbeskaeftigelse_antalaarsvaerk)));
+  WHERE  ((cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.indlaest_dato = cvr_prod_enhed_geo_hist_ansatte_kvartal_nyeste.ansatte_dato)
+  AND    ((cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.kvartalsbeskaeftigelse_aar != stam.kvartalsbeskaeftigelse_aar) OR
+         (cvr.cvr_prod_enhed_geo_hist_ansatte_kvartal.kvartalsbeskaeftigelse_kvartal != stam.kvartalsbeskaeftigelse_kvartal)));
 
 ----------------------------------------------------------------------------------------
 /* REFRESH MATERIALIZED VIEWS */
-----------------------------------------------------------------------------------------	   
+----------------------------------------------------------------------------------------
 
 REFRESH MATERIALIZED VIEW cvr.cvr_prod_enhed_adresser;
 REFRESH MATERIALIZED VIEW cvr.cvr_prod_enhed_ansatte_aar;
 REFRESH MATERIALIZED VIEW cvr.cvr_prod_enhed_ansatte_kvartal;
 REFRESH MATERIALIZED VIEW cvr.cvr_prod_enhed_hovedbranche;
 
-$$ LANGUAGE SQL;
+$$;
+
