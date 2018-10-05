@@ -1,5 +1,5 @@
 CREATE FUNCTION flyt(komkode integer, startdato date, slutdato date)
-  RETURNS TABLE(status text, "cvr-nummer" bigint, "p-nummer" bigint, hovedbranche character varying, navn character varying, kommunekode smallint, vejnavn character varying, husnummer bigint, postnummer bigint, postdistrikt character varying, emailadresse character varying, startdato timestamp without time zone, "X koordinat" double precision, "Y koordinat" double precision, "indlæst dato" date)
+  RETURNS TABLE(status text, "cvr-nummer" bigint, "p-nummer" bigint, hovedbranche character varying, navn character varying, kommunekode smallint, vejnavn character varying, husnummer bigint, postnummer bigint, postdistrikt character varying, emailadresse character varying, startdato timestamp without time zone, geom geometry, "indlæst dato" date)
 LANGUAGE SQL
 AS $$
 SELECT
@@ -15,8 +15,7 @@ SELECT
     stam.email_kontaktoplysning,
     flyt.belig_adresse_postdistrikt,
     stam.livsforloeb_startdato,
-    flyt.x,
-    flyt.y,
+    flyt.geom,
     flyt.indlaest_dato
 FROM (
        SELECT 'Tilflytter'::text AS flyttemoenster,
@@ -26,8 +25,7 @@ FROM (
             a.belig_adresse_husnummerfra,
             a.beliggenhedsadresse_postnr,
             a.belig_adresse_postdistrikt,
-            a.x,
-            a.y,
+            a.geom,
             a.indlaest_dato
         FROM (
                SELECT
@@ -38,8 +36,7 @@ FROM (
                  belig_adresse_husnummerfra,
                  beliggenhedsadresse_postnr,
                  belig_adresse_postdistrikt,
-                 st_x(st_transform(geom, 4326)) x,
-                 st_y(st_transform(geom, 4326)) y,
+                 geom,
                  indlaest_dato
                FROM cvr.cvr_prod_enhed_geo_hist_adresser
                WHERE beliggenhedsadresse_gyldigfra BETWEEN startdato AND slutdato
@@ -53,8 +50,7 @@ FROM (
                           belig_adresse_husnummerfra,
                           beliggenhedsadresse_postnr,
                           belig_adresse_postdistrikt,
-                          st_x(st_transform(geom, 4326)) x,
-                          st_y(st_transform(geom, 4326)) y,
+						  geom,
                           indlaest_dato
                        FROM cvr.cvr_prod_enhed_geo_hist_adresser c
                        WHERE beliggenhedsadresse_gyldigfra = (
@@ -74,8 +70,7 @@ FROM (
           a.belig_adresse_husnummerfra,
           a.beliggenhedsadresse_postnr,
           a.belig_adresse_postdistrikt,
-          a.x,
-          a.y,
+		  a.geom,
           a.indlaest_dato
         FROM (
                SELECT
@@ -86,8 +81,7 @@ FROM (
                  belig_adresse_husnummerfra,
                  beliggenhedsadresse_postnr,
                  belig_adresse_postdistrikt,
-                 st_x(st_transform(geom, 4326)) x,
-                 st_y(st_transform(geom, 4326)) y,
+		  		 geom,
                  indlaest_dato
                FROM cvr.cvr_prod_enhed_geo_hist_adresser
                WHERE beliggenhedsadresse_gyldigfra BETWEEN startdato AND slutdato
@@ -101,8 +95,7 @@ FROM (
                         belig_adresse_husnummerfra,
                         beliggenhedsadresse_postnr,
                         belig_adresse_postdistrikt,
-                        st_x(st_transform(geom, 4326)) x,
-                        st_y(st_transform(geom, 4326)) y,
+		  				geom,
                         indlaest_dato
                       FROM cvr.cvr_prod_enhed_geo_hist_adresser c
                       WHERE beliggenhedsadresse_gyldigfra = (
@@ -122,8 +115,7 @@ FROM (
           a.belig_adresse_husnummerfra,
           a.beliggenhedsadresse_postnr,
           a.belig_adresse_postdistrikt,
-          st_x(st_transform(a.geom, 4326)) x,
-          st_y(st_transform(a.geom, 4326)) y,
+		  a.geom,          
           a.indlaest_dato
         FROM cvr.cvr_prod_enhed_geo_stam a
         WHERE a.kommune_kode = komkode AND a.livsforloeb_startdato BETWEEN startdato AND slutdato
@@ -137,8 +129,7 @@ FROM (
           a.belig_adresse_husnummerfra,
           a.beliggenhedsadresse_postnr,
           a.belig_adresse_postdistrikt,
-          st_x(st_transform(a.geom, 4326)) x,
-          st_y(st_transform(a.geom, 4326)) y,
+		  a.geom,
           a.indlaest_dato
         FROM cvr.cvr_prod_enhed_geo_stam a
         WHERE a.kommune_kode = komkode AND a.livsforloeb_ophoersdato BETWEEN startdato AND slutdato) as flyt
