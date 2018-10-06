@@ -1,8 +1,8 @@
-CREATE FUNCTION flyt_fad(komkode integer, startdato date, slutdato date)
+CREATE OR REPLACE FUNCTION cvr.flyt_fad(komkode integer, startdato date, slutdato date)
   RETURNS TABLE(status text, "cvr-nummer" bigint, "p-nummer" bigint, hovedbranche character varying, navn character varying, "fuldt ansvarlige deltagere" character varying, kommunekode smallint, vejnavn character varying, husnummer bigint, postnummer bigint, postdistrikt character varying, emailadresse character varying, startdato timestamp without time zone, geom geometry, "indlæst dato" date)
 LANGUAGE SQL
 AS $$
-SELECT 
+SELECT
 DISTINCT 
   
     flyt.flyttemoenster,
@@ -15,8 +15,8 @@ DISTINCT
     flyt.beliggenhedsadresse_vejnavn,
     flyt.belig_adresse_husnummerfra,
     flyt.beliggenhedsadresse_postnr,
-    stam.email_kontaktoplysning,
     flyt.belig_adresse_postdistrikt,
+    stam.email_kontaktoplysning,
     stam.livsforloeb_startdato,
     flyt.geom,
     flyt.indlaest_dato
