@@ -1,4 +1,4 @@
-CREATE FUNCTION cvr.flyt_custom(komkode integer, startdato date, slutdato date)
+CREATE OR REPLACE FUNCTION cvr.flyt_fad_custom(komkode integer, startdato date, slutdato date)
   RETURNS TABLE(
     status text,
     "cvr-nummer" bigint,
@@ -36,7 +36,7 @@ SELECT
   flyt.flyttemoenster,
   stam.virksomhed_cvrnr,
   flyt.pnr,
-  stam.beliggenhedsadresse_gyldigfra,
+  flyt.aktivitetsdato,
   stam.navn_tekst,
   flyt.beliggenhedsadresse_vejnavn,
   flyt.belig_adresse_husnummerfra,
@@ -68,6 +68,7 @@ FROM (
        SELECT 'Tilflytter'::text AS flyttemoenster,
             a.pnr,
             a.kommune_kode,
+            a.beliggenhedsadresse_gyldigfra AS "aktivitetsdato",
             a.beliggenhedsadresse_vejnavn,
             a.belig_adresse_husnummerfra,
             a.beliggenhedsadresse_postnr,
@@ -121,6 +122,7 @@ FROM (
         SELECT 'Fraflytter'::text AS flyttemoenster,
           a.pnr,
           a.kommune_kode,
+          a.beliggenhedsadresse_gyldigfra AS "aktivitetsdato",
           a.beliggenhedsadresse_vejnavn,
           a.belig_adresse_husnummerfra,
           a.beliggenhedsadresse_postnr,
@@ -176,6 +178,7 @@ FROM (
         SELECT 'Nystartet'::text AS flyttemoenster,
           a.pnr,
           a.kommune_kode,
+          a.beliggenhedsadresse_gyldigfra AS "aktivitetsdato",
           a.beliggenhedsadresse_vejnavn,
           a.belig_adresse_husnummerfra,
           a.beliggenhedsadresse_postnr,
@@ -196,6 +199,7 @@ FROM (
         SELECT 'Ophørt'::text AS flyttemoenster,
           a.pnr,
           a.kommune_kode,
+          a.livsforloeb_ophoersdato AS "aktivitetsdato",
           a.beliggenhedsadresse_vejnavn,
           a.belig_adresse_husnummerfra,
           a.beliggenhedsadresse_postnr,
